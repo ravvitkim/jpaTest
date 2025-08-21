@@ -2,6 +2,7 @@ package com.my.jpaTest.repository;
 
 import com.my.jpaTest.dto.Gender;
 import net.bytebuddy.build.ToStringPlugin;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,7 +64,15 @@ class UsersRepositoryTest {
 //        한달 전 날에다 시분초를 붙인다.
         LocalDateTime start = baseDate.atTime(0, 0, 0);
         LocalDateTime end = LocalDateTime.now();
-        usersRepository.findByCreatedAtBetween(start,end)
+        usersRepository.findByCreatedAtBetween(start, end)
+                .forEach(x -> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("여러가지 좋아하는 색상 검색하기")
+    void findByLikeColorIn() {
+//        검색하고자하는 색상의 리스트 만들기
+        usersRepository.findByLikeColorIn(Lists.newArrayList("Red","Pink"))
                 .forEach(x-> System.out.println(x));
     }
 }
