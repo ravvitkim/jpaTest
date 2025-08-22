@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
@@ -73,6 +74,56 @@ class UsersRepositoryTest {
     void findByLikeColorIn() {
 //        검색하고자하는 색상의 리스트 만들기
         usersRepository.findByLikeColorIn(Lists.newArrayList("Red","Pink"))
+                .forEach(x-> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("id가91이상인자료")
+    void findIdByGreaterThanEqual() {
+        usersRepository.findByIdGreaterThanEqual(91L)
+                .forEach(x-> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("")
+    void findByNameStartingWith() {
+        usersRepository.findByNameStartingWith("D")
+               .forEach(x-> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("")
+    void findByEmailContains() {
+        usersRepository.findByEmailContains("org")
+                .forEach(x-> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("")
+    void findByEmailLike() {
+        usersRepository.findByEmailLike("%org%")
+                .forEach(x-> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("")
+    void findByIdBetweenOrderByNameDesc() {
+        usersRepository.findByIdBetweenOrderByNameDesc(1L,10L)
+                .forEach(x-> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("")
+    void findTop10ByLikeColorOrderByGenderAscCreatedAtDesc() {
+        usersRepository.findTop10ByLikeColorOrderByGenderAscCreatedAtDesc("Orange")
+                .forEach(x-> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("")
+    void findByLikeColor() {
+        usersRepository.findByLikeColor("Orange", Sort.by(Sort.Order.asc("gender"),
+                Sort.Order.desc("createdAt")))
                 .forEach(x-> System.out.println(x));
     }
 }

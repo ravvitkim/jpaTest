@@ -3,6 +3,7 @@ package com.my.jpaTest.repository;
 import com.my.jpaTest.dto.Gender;
 import com.my.jpaTest.entity.Users;
 import org.apache.catalina.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -35,4 +36,46 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 //    select * from users where like color in('Red','Pink');
 //    In 구문에는 리스트를 인자로 준다.
     List<Users> findByLikeColorIn(List<String> colors);
+
+    //    7.id가91번 이상인 자료를 찾아봅니다.
+//    select * from users where
+//    >=GreaterThanEqual, <=:LessThanEqual
+//    >:After, < :Before
+//    null값 비교 : Null or IsNotNull
+    List<Users> findByIdGreaterThanEqual(Long id);
+
+    //    8.문자열 관련 메서드 함수
+//    StartingWith : 주어진 문자열로 시작하는 데이터
+//    EndingWith : 주어진 문자열로 끝나는 데이터
+//    Contains : 포함된 자료
+//    Like : 사용시 넘겨주는 인자 값 양쪽에 %를 붙혀줘야한다.
+//    8.1 이름이 d로 시작하는 데이터 전체출력
+//    select * from users where name like 'd%';
+    List<Users> findByNameStartingWith(String x);
+//    8.2 이름이 s로 끝나는 데이터 전체출력
+//    select * from users where name like '%s';
+//    List<Users> findByNameEndingWith(String x);
+//    8.3 email에 org를 포함하는 데이터 (Contain/like)
+//    select * from users where email like '%org%';
+    List<Users> findByEmailContains(String x);
+    List<Users> findByEmailLike(String x);
+
+    //    9.정렬
+//    id: 1~10까지 이름의 내림차순으로 정렬
+//    select * from users where id between 1 to 10 order by name desc;
+    List<Users> findByIdBetweenOrderByNameDesc(Long start, Long end);
+
+    //    orange색상 중 Gender에 오름차순,CreatedAt에 내림차순 후 상위 10개를 검색
+//    select * from users where like_color='Orange' order by gender asc, created_at desc
+    List<Users> findTop10ByLikeColorOrderByGenderAscCreatedAtDesc(String color);
+
+    //    10. Sort 사용하기
+    List<Users> findByLikeColor(String color, Sort sort);
+
+    // 이름에 특정 문자열이 포함되고 성별이 여성인 사용자 검색
+    List<Users> findByGenderAndNameContaining(Gender gender, String name);
+
+    List<Users> findByNameStartingWithAndCreatedAtBetween(String x, LocalDateTime start, LocalDateTime end);
+
+
 }
