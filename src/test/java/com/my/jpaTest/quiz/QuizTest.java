@@ -49,48 +49,83 @@ public class QuizTest {
     }
 
     @Test
-    @DisplayName(".문제 1. 여성의 이름 중 \"w\"또는 \"m\"을 포함하는 자료를 검색하시오.")
-    void 문제1() {
-        List<Users> listW = repository.findByGenderAndNameContaining(Gender.Female, "w");
-        List<Users> listM = repository.findByGenderAndNameContaining(Gender.Female, "m");
-        List<Users> result = new ArrayList<>();
-        result.addAll(listW);
-        result.addAll(listM);
-        result.forEach(x -> System.out.println(x));
-    }
-
-    @Test
-    @DisplayName("문제 2. 이메일에 net을 포함하는 데이터 건수를 출력하시오.")
-    void 문제2() {
-        repository.findByEmailContains("net").forEach(x -> System.out.println(x));
-    }
-
-    @Test
-    @DisplayName("문제 3. 가장 최근 한달이내에 업데이트된 자료 중 이름 첫자가 \"J\"인 자료를 출력하시오.")
-    void 문제3() {
-        LocalDate baseDate = LocalDate.now().minusMonths(1L);
-        LocalDateTime start = baseDate.atTime(0, 0, 0);
-        LocalDateTime end = LocalDateTime.now();
-        repository.findByNameStartingWithAndCreatedAtBetween("J", start, end)
+    @DisplayName("문제 1")
+    void findByGenderAndNameContainsOrGenderAndNameContains() {
+        repository
+                .findByGenderAndNameContainsOrGenderAndNameContains(
+                        Gender.Female, "w", Gender.Female, "m")
                 .forEach(x -> System.out.println(x));
+        // 다시 마지막
     }
 
     @Test
-    @DisplayName("문제 4. 가장 최근 생성된 자료 10건을 ID, 이름, 성별, 생성일 만 출력하시오.")
-    void 문제4() {
-
+    @DisplayName("문제 2")
+    void net을포함하는데이터건수() {
+        System.out.println(
+                repository.findByEmailContains("net")
+                        .stream().count()
+        );
     }
 
     @Test
-    @DisplayName("문제 5. \"Red\"를 좋아하는 남성 이메일 계정 중 사이트를 제외한 계정만 출력하시오.\n" +
-            "(예, apenley2@tripod.com  → apenley2)")
-    void 문제5() {
-        repository.findByGenderAndLikeColor(Gender.Male,"Red")
-                .forEach(x->{
-                    String email = x.getEmail();
-                    String account = email.split("@")[0];
-                    System.out.println(account);
-                    });
+    @DisplayName("문제 3")
+    void findByUpdatedAtGreaterThanEqualAndNameLike() {
+        LocalDate baseDate = LocalDate.now()
+                .minusMonths(1L)
+                .plusDays(1L);
+        LocalDateTime start = baseDate.atStartOfDay();
+        repository.findByUpdatedAtGreaterThanEqualAndNameLike(
+                start, "J%"
+        ).forEach(x -> System.out.println(x));
+    }
+
+    @Test
+    @DisplayName("문제 4")
+        // ID, 이름, 성별, 생성일
+    void findTop10ByOrderByCreatedAtDesc() {
+        List<Users> results = repository.findTop10ByOrderByCreatedAtDesc();
+        for (Users user : results) {
+            System.out.println("ID : " + user.getId() +
+                    ", Name : " + user.getName() +
+                    ", Gender : " + user.getGender() +
+                    ", CreatedAt : " + user.getCreatedAt());
+        }
+    }
+
+    @Test
+    @DisplayName("문제 5")
+        // 사이트를 제외한 계정만 출력
+    void findByGenderAndLikeColor() {
+        List<Users> results = repository.findByGenderAndLikeColor(
+                Gender.Male, "Red"
+        );
+        for (Users user : results) {
+            String mail = user.getEmail();
+            String account = mail.substring(0, mail.indexOf("@"));
+            System.out.println("Email : " + mail + ",Account : " + account);
+        }
+    }
+
+    //문제 6. 갱신일이 생성일 이전인 잘못된 데이터를 출력하시오.
+    @Test
+    @DisplayName("문제 6")
+    void errorDataList() {
+        List<Users> users = repository.findAll();
+        for (Users user : users) {
+            if (user.getCreatedAt().isAfter(user.getUpdatedAt())) {
+                System.out.println(user);
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("문제 7")
+    void findByGenderAndEmailContainsOrderByCreatedAtDesc() {
+        repository
+                .findByGenderAndEmailContainsOrderByCreatedAtDesc(
+                        Gender.Female, "edu"
+                )
+                .forEach(x-> System.out.println(x));
     }
 }
 
