@@ -78,4 +78,29 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     List<Users> findByNameStartingWithAndCreatedAtBetween(String x, LocalDateTime start, LocalDateTime end);
 
 
+    // 문제 1. 여성의 이름 중 "w"또는 "m"을 포함하는 자료를 검색하시오.
+    List<Users> findByGenderAndNameContainsOrGenderAndNameContains
+    (Gender gender1, String name1, Gender gender2, String name2);
+
+    // 문제 2. 이메일에 net을 포함하는 데이터 건수를 출력
+    // List<Users> findByEmailContains 활용
+
+    // 문제 3. 가장 최근 한달이내에 업데이트된 자료 중 이름 첫자가 "J"인 자료를 출력
+    List<Users> findByUpdatedAtGreaterThanEqualAndNameLike(
+            LocalDateTime start, String data
+    );
+
+    // 문제 4. 가장 최근 생성된 자료 10건을 ID, 이름, 성별, 생성일 만 출력
+    List<Users> findTop10ByOrderByCreatedAtDesc();
+
+    //문제 5. "Red"를 좋아하는 남성 이메일 계정 중 사이트를 제외한 계정만 출력
+    //List<Users> findByGenderAndLikeColor(Gender gender, String color);
+
+    //문제 6. 갱신일이 생성일 이전인 잘못된 데이터를 출력하시오.
+
+    //문제 7. 이메일에 edu를 갖는 여성 데이터를 가장 최근 데이터부터 보이도록 출력
+    List<Users> findByGenderAndEmailContainsOrderByCreatedAtDesc(
+            Gender gender, String email
+    );
+
 }
