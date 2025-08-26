@@ -1,6 +1,7 @@
 package com.my.jpaTest.service;
 
 import com.my.jpaTest.entity.Member;
+import com.my.jpaTest.entity.Parent;
 import com.my.jpaTest.entity.Team;
 import jakarta.persistence.EntityManager;
 import jdk.jfr.Relational;
@@ -54,6 +55,18 @@ class RelationTestServiceTest {
         for (Member m : members) {
             System.out.println(m.getName());
         }
+    }
+
+    @Test
+    @DisplayName("영속성 전이 테스트")
+    void persistTest() {
+        relationTestService.saveChildren();
+    }
+
+    @Test
+    @DisplayName("부모삭제테스트-자식도 같이")
+    void deleteTest() {
+       relationTestService.deleteParent();
     }
 
 //    //장원영의 팀이름찾기
