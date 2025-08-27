@@ -31,7 +31,7 @@ class EnterServiceTest {
     @Test
     @DisplayName("")
     void 문제2() {
-        GirlGroup group = em.find(GirlGroup.class, "blackpink");
+        GirlGroup group = em.find(GirlGroup.class, "blackPink");
         group.getMembers().forEach(x-> System.out.println(x.getI_name()));
     }
 }
